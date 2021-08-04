@@ -1,10 +1,57 @@
+let pagina = 1;
+
 document.addEventListener('DOMContentLoaded', function() {
 	iniciarApp();
 })
 
 function iniciarApp() {
-	console.log("iniciando app")
 	mostrarServicios();
+
+  //Resalta el div actual segun el tab al que se presiona
+  mostrarSeccion();
+
+  //Oculta o muestra una seccion segun el tab al que se presiona
+  cambiarSeccion();
+
+  //Paginacion siguinete y anterior
+  paginaSiguinete();
+  paginaAnterior();
+
+  //Muestra o ocultar los botones segun la pagina
+  botonPaginador();
+}
+
+function mostrarSeccion() {
+  //Eliminar mostrar-seccion de la seccion anterior
+  const seccionAterior = document.querySelector('.show-section')
+  if(seccionAterior) {
+    seccionAterior.classList.remove('show-section');
+  }
+
+  const seccionActual = document.querySelector(`#step-${pagina}`)
+  seccionActual.classList.add('show-section');
+
+  //Eliminar la clase de actual en el tab anterior
+  const tabAnterior = document.querySelector('.tabs .actual')
+  if(tabAnterior){ 
+    tabAnterior.classList.remove('actual');
+  }
+      
+  //Resalta el Tab actual
+  const tab = document.querySelector(`[data-step="${pagina}"]`)
+  tab.classList.add('actual');
+}
+
+function cambiarSeccion() {
+  const enlaces = document.querySelectorAll('.tabs button')
+  enlaces.forEach( enlace => {
+    enlace.addEventListener('click', e => {
+      e.preventDefault();
+      pagina = parseInt(e.target.dataset.step);
+      mostrarSeccion();
+      botonPaginador();
+    })
+  })
 }
 
 async function mostrarServicios() {
@@ -12,11 +59,13 @@ async function mostrarServicios() {
 		const resultado = await fetch('./servicios.json')
 		const db = await resultado.json();
 		const { servicios } = db;
+
 		// Generar el HTML
 		servicios.forEach( servicio => {
 			const { id, nombre, precio } = servicio;
 
 			// DOM Scripting
+
 			// Generar nombre de servicio
 			const nombreServicio = document.createElement('P');
 			nombreServicio.textContent = nombre;
@@ -61,4 +110,35 @@ function seleccionarServicio(e) {
 	}else{
 		elemento.classList.add('selected')
 	}
+}
+
+function paginaSiguinete() {
+  const paginaSiguinete = document.querySelector('#next')
+  paginaSiguinete.addEventListener('click', function() {
+    pagina++;
+    botonPaginador();
+  })
+}
+
+function paginaAnterior() {
+  const paginaAnterior = document.querySelector('#before')
+  paginaAnterior.addEventListener('click', function() {
+    pagina--;
+    botonPaginador();
+  })
+}
+
+function botonPaginador() {
+	const paginaSiguinete = document.querySelector('#next')
+	const paginaAnterior = document.querySelector('#before')
+  if(pagina === 1) {
+    paginaAnterior.classList.add('hide');
+  } else if(pagina === 3){
+    paginaSiguinete.classList.add('hide');
+    paginaAnterior.classList.remove('hide')
+  } else {
+    paginaAnterior.classList.remove('hide');
+    paginaSiguinete.classList.remove('hide');
+  }
+  mostrarSeccion(); //Cambia la seccion que se muestra por la pagina
 }

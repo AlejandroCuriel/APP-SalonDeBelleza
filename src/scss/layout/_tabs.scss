@@ -2,13 +2,18 @@
   @include grid(3, 2rem);
 
   button {
-    background-color: $blue;
+    background-color: $white;
     border: none;
     font-size: 4rem;
     font-weight: $bold;
     padding: 1rem;
     text-align: center;
     text-transform: uppercase;
+    
+    &.actual {
+      background-color: $blue;
+      color: $white;
+    }
     
     &:hover {
       cursor: pointer;
