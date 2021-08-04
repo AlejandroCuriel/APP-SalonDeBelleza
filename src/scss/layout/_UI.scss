@@ -1,0 +1,36 @@
+html {
+  background-color: $black;
+}
+
+.aesthetic__container {
+  @include tablet {
+    height: 100vh;
+    @include grid(2, $separation / 2);
+  }
+
+  .image {
+    background-image: url('../img/1.jpg');
+    background-position: center;
+    background-size: cover;
+    height: 30rem;
+
+    @include tablet {
+      height: auto;
+    }
+  }
+}
+
+.app {
+  margin: 0 auto;
+  padding-top: $separation / 2;
+  width: 95%;
+
+  .section {
+    display: none;
+    margin-top: $separation / 2;
+
+    &:first-of-type {
+      display: block;
+    }
+  }
+}
