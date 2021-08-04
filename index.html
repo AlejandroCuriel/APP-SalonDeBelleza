@@ -15,25 +15,30 @@
           <h1>App Peluqueria</h1>
         </header>
         <nav class="tabs">
-          <button type="button">Servicios</button>
-          <button type="button">Información Cliente</button>
-          <button type="button">Resumen</button>
+          <button type="button" data-step='1'>Servicios</button>
+          <button type="button" data-step='2'>Información Cliente</button>
+          <button type="button" data-step='3'>Resumen</button>
         </nav>
+
         <!--Inicia Contenido APP-->
-        <div class="section">
+        <div id="step-1" class="section">
           <h2>Servicios</h2>
           <p class="text-center">Elige tus servicios a Continuación</p>
           <div id="services" class="services__list"></div>
         </div>
-        <div class="section">
+        <div id="step-2" class="section">
           <h2>Tus datos y Cita</h2>
         </div>
-        <div class="section">
+        <div id="step-3" class="section">
           <h2>Resumen</h2>
+        </div>
+        <div class="pagination">
+          <button id="before"> &laquo; anterior</button>
+          <button id="next">siguiente &raquo; </button>
         </div>
       </div>
     </div>
-
+    
     <script src="build/js/bundle.min.js"></script>
   </body>
 </html>
