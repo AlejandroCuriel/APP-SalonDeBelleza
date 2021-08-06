@@ -28,6 +28,20 @@ function iniciarApp() {
 
   //Muestra el resumen de la cita o mensaje de error en caso de no pasar la validacion
   mostrarResumen();
+
+  //Almacena el nombre en el objeto de cita
+  nombreCita();
+
+  //Almacena la fecha de la cita en el objeto
+  fechaCita();
+
+  //Almacena la hora de la cita del objeto
+  horaCita();
+
+  //Deshabilita dias pasados
+  deshabilitarFechaAnterior();
+
+
 }
 
 function mostrarSeccion() {
@@ -170,6 +184,7 @@ function botonPaginador() {
   } else if(pagina === 3){
     paginaSiguinete.classList.add('hide');
     paginaAnterior.classList.remove('hide')
+    mostrarResumen();
   } else {
     paginaAnterior.classList.remove('hide');
     paginaSiguinete.classList.remove('hide');
@@ -192,6 +207,105 @@ function mostrarResumen(){
   
     //Agregar a resumen Div
     resumenDiv.appendChild(noServicios)
+  } else {
+    console.log('Todo bien carnal, wuacha')
+    console.log(cita)
   }
 
+}
+
+function nombreCita() {
+  const nombreInput = document.querySelector('#name')
+  nombreInput.addEventListener('input', e => {
+    const nombreTexto = e.target.value.trim(); //Trim nos ayuda a eliminar los espacios vacios al inicio y final
+    
+    //Validacion que de nombreTexto debe tener algo 
+    if(nombreTexto === '' || nombreTexto.length < 3){
+      mostrarAlerta('Nombre Invalido', 'error')
+    }else {
+      const alerta = document.querySelector('.alert')
+      if(alerta){
+        alerta.remove();
+      }
+      cita.nombre = nombreTexto
+      
+    }
+  })
+}
+
+function mostrarAlerta(mensaje, tipo) {
+  //Si hay una alerta ya existente no crear otra
+  const alertaPrevia = document.querySelector('.alert')
+  if(alertaPrevia){
+    return;
+  }
+  
+  const alerta = document.createElement('DIV')
+  alerta.textContent = mensaje;
+  alerta.classList.add('alert');
+  if(tipo === 'error') {
+    alerta.classList.add('error')
+  }
+
+  //Insertar en el HTML
+  const formulario = document.querySelector('.form');
+  formulario.appendChild(alerta);
+
+  //ELiminar alerta despues de 3 segundos
+  setTimeout(() => {
+    alerta.remove()
+  },3000)
+}
+
+function fechaCita() {
+  const fechaInput = document.querySelector('#date');
+  fechaInput.addEventListener('input', e => {
+    console.log(e.target.value)
+    const dia = new Date(e.target.value).getUTCDay();
+
+    if([0, 6].includes(dia)){
+      e.preventDefault();
+      fechaInput.value = '' //Hacemos que quede en blanco el campo de fecha
+      mostrarAlerta('Fines de semana no son permitidos', 'error');
+    } else {
+      cita.fecha = fechaInput.value;
+      console.log(cita);
+    }
+    console.log(dia)
+    // const opciones = {
+    //   weekday: 'long',
+    //   year: 'numeric',
+    //   month: 'long'
+    // // }
+    // console.log(dia.toLocaleDateString('es-ES', opciones))
+  })
+}
+
+function deshabilitarFechaAnterior() {
+  const inputFecha = document.querySelector('#date')
+  const fechaActual = new Date();
+  const year = fechaActual.getFullYear();
+  const mes = fechaActual.getMonth() + 1;
+  const dia = fechaActual.getDate() + 1;
+
+  //Formato deseado: AAA-MM-DD
+  const fechaDeshabilitar = `${year}-${mes < 10 ? `0${mes}` : mes}-${dia < 10 ? `0${dia}` : dia}`
+  inputFecha.min = fechaDeshabilitar
+  console.log(fechaDeshabilitar)
+  console.log(fechaDeshabilitar)
+}
+
+function horaCita() {
+  const inputHora = document.querySelector('#hour')
+  inputHora.addEventListener('input', e => {
+    const horaCita = e.target.value;
+    const hora = horaCita.split(':')
+    if(hora[0] < 10 || hora[0] > 20){
+      mostrarAlerta('Hora no valida','error')
+      inputHora.value = ''
+    } else {
+      cita.hora = horaCita;
+    }
+    console.log(cita)
+  })
 }
