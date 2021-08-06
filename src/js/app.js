@@ -1,5 +1,11 @@
 let pagina = 1;
 
+const cita = {
+  nombre: '',
+  fecha: '',
+  hora: '',
+  servicios: []
+}
 document.addEventListener('DOMContentLoaded', function() {
 	iniciarApp();
 })
@@ -19,6 +25,9 @@ function iniciarApp() {
 
   //Muestra o ocultar los botones segun la pagina
   botonPaginador();
+
+  //Muestra el resumen de la cita o mensaje de error en caso de no pasar la validacion
+  mostrarResumen();
 }
 
 function mostrarSeccion() {
@@ -106,10 +115,35 @@ function seleccionarServicio(e) {
 	}
   console.log(elemento)
 	if(elemento.classList.contains('selected')){
-		elemento.classList.remove('selected')
+		elemento.classList.remove('selected');
+
+    const id = parseInt(elemento.dataset.idServicio);
+
+    eliminarServicio(id);
 	}else{
 		elemento.classList.add('selected')
+
+    const servicioObj = {
+      id: parseInt(elemento.dataset.idServicio),
+      nombre: elemento.firstElementChild.textContent,
+      precio: elemento.firstElementChild.nextElementSibling.textContent
+    }
+
+    agregarServicio(servicioObj);
 	}
+}
+
+function agregarServicio(servicioObj) { 
+  const { servicios } = cita;
+  cita.servicios = [...servicios, servicioObj];
+  console.log(cita);
+}
+
+function eliminarServicio(id) {
+  console.log('Eliminando..', id)
+  const { servicios } = cita;
+  cita.servicios = servicios.filter( servicio => servicio.id !== id)
+  console.log(cita)
 }
 
 function paginaSiguinete() {
@@ -141,4 +175,23 @@ function botonPaginador() {
     paginaSiguinete.classList.remove('hide');
   }
   mostrarSeccion(); //Cambia la seccion que se muestra por la pagina
+}
+
+function mostrarResumen(){
+  //Destructuring
+  const { nombre, fecha, hora, servicio } = cita;
+
+  //Seleccionar el resumen
+  const resumenDiv = document.querySelector('.content__summary')
+
+  //Validacion de objeto
+  if(Object.values(cita).includes('')){
+    const noServicios = document.createElement('P')
+    noServicios.textContent = 'Faltan datos de Servicios, hora, fecha o nombre';
+    noServicios.classList.add('content__appointment--invalidate')
+  
+    //Agregar a resumen Div
+    resumenDiv.appendChild(noServicios)
+  }
+
 }
