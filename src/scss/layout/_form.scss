@@ -1,0 +1,22 @@
+.form {
+  width: 100%;
+  
+}
+
+.field {
+  display: flex;
+  margin-bottom: 2rem;
+  align-items: center;
+
+  label {
+    flex: 0 0 10rem;
+    color: $white;
+  }
+
+  input { 
+    flex: 1;
+    padding: $separation / 4;
+    border-radius: 1rem;
+    border: none;
+  }
+}
